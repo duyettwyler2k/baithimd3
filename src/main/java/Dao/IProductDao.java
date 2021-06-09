@@ -9,4 +9,5 @@ List<Product> selectAllProduct();
 public void insertProduct(Product product);
 boolean updateProduct(Product product);
 boolean deleteProduct(int id);
+List<Product> findByName(String name);
 }

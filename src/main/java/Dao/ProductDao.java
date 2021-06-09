@@ -14,6 +14,8 @@ public class ProductDao implements IProductDao {
     public static final String INSERT_PRODUCT = "insert into product(name,price,number,color,mota,danh_sach) values(?,?,?,?,?,?)";
     public static final String UPDATE_PRODUCT = "update product set name=?,price=?,number=?,color=?,mota=?,danh_sach=? where id=?";
     public static final String DELETE_PRODUCT = "delete from product where id=?";
+    public static final String FIND_BYNAME = "select*from product where name like ?";
+
     @Override
     public List<Product> selectAllProduct() {
         List<Product> products = new ArrayList<>();
@@ -67,12 +69,12 @@ public class ProductDao implements IProductDao {
             preparedStatement.setString(4, product.getColor());
             preparedStatement.setString(5, product.getMota());
             preparedStatement.setString(6, product.getDanh_sach());
-            preparedStatement.setInt(7,product.getId());
-            rowUpdate=preparedStatement.executeUpdate();
+            preparedStatement.setInt(7, product.getId());
+            rowUpdate = preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        return rowUpdate!=0;
+        return rowUpdate != 0;
     }
 
     @Override
@@ -90,7 +92,30 @@ public class ProductDao implements IProductDao {
 
     }
 
-    public static void main(String[] args) {
+    @Override
+    public List<Product> findByName(String name) {
+        List<Product> products = new ArrayList<>();
+        Connection connection = SQLConnection.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement(FIND_BYNAME);
+            preparedStatement.setString(1, "%" + name + "%");
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name1 = resultSet.getString("name");
+                double price = resultSet.getDouble("price");
+                int number = resultSet.getInt("number");
+                String color = resultSet.getString("color");
+                String mota = resultSet.getString("mota");
+                String danh_sach = resultSet.getString("danh_sach");
+                products.add(new Product(id, name1, price, number, color, mota, danh_sach));
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
 
+        return products;
     }
+
+
 }

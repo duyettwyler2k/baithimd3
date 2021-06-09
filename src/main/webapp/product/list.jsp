@@ -7,6 +7,10 @@
 <body>
 <h1>List Product</h1>
 <a href="/products?action=create">Create new product</a>
+<form>
+    <input type="text" name="search">
+    <button>Search</button>
+</form>
 <table>
 <tr>
     <td>id</td>
